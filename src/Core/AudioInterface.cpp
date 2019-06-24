@@ -347,6 +347,48 @@ struct AudioInterface16Widget : ModuleWidget {
 	}
 };
 
+struct AudioInterface32Widget : ModuleWidget {
+	typedef AudioInterface<32, 32> TAudioInterface;
+
+	AudioInterface32Widget(TAudioInterface *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::system("res/Core/AudioInterface32.svg")));
+
+		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+
+		int inputId = TAudioInterface::AUDIO_INPUT;
+		int inputLight = TAudioInterface::INPUT_LIGHT;
+		for (int y = 0; y < 2; y++) {
+			for (int x = 0; x < 16; x++) {
+				float xpos = x * 11.599;
+				float ypos = y * 14.613;
+				addInput(createInputCentered<PJ301MPort>(mm2px(Vec(7.661 + xpos, 59.638 + ypos)), module, inputId++));
+				if ((x & 1) == 0) addChild(createLightCentered<SmallLight<GreenLight>>(mm2px(Vec(13.46 + xpos, 55.667 + ypos)), module, inputLight++));
+			}
+		}
+
+		int outputId = TAudioInterface::AUDIO_OUTPUT;
+		int outputLight = TAudioInterface::OUTPUT_LIGHT;
+		for (int y = 0; y < 2; y++) {
+			for (int x = 0; x < 16; x++) {
+				float xpos = x * 11.599;
+				float ypos = y * 14.613;
+				addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(7.661 + xpos, 96.251 + ypos)), module, outputId++));
+				if ((x & 1) == 0) addChild(createLightCentered<SmallLight<GreenLight>>(mm2px(Vec(13.46 + xpos, 92.238 + ypos)), module, outputLight++));
+			}
+		}
+
+		AudioWidget *audioWidget = createWidget<AudioWidget>(mm2px(Vec(2.57, 14.839)));
+		audioWidget->box.size = mm2px(Vec(91.382 * 2, 28.0));
+		audioWidget->setAudioPort(module ? &module->port : NULL);
+		addChild(audioWidget);
+	}
+};
+
 
 Model *modelAudioInterface = createModel<AudioInterface<8, 8>, AudioInterface8Widget>("AudioInterface");
 Model *modelAudioInterface16 = createModel<AudioInterface<16, 16>, AudioInterface16Widget>("AudioInterface16");
+Model *modelAudioInterface32 = createModel<AudioInterface<32, 32>, AudioInterface32Widget>("AudioInterface32");

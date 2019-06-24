@@ -29,6 +29,14 @@
       ]
     },
     {
+      "slug": "AudioInterface32",
+      "name": "Audio-32",
+      "description": "Sends audio and CV to/from an audio device",
+      "tags": [
+        "External"
+      ]
+    },
+    {
       "slug": "MIDIToCVInterface",
       "name": "MIDI-CV",
       "description": "Converts MIDI from an external device to CV and gates",
